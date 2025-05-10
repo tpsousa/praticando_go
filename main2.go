@@ -20,5 +20,5 @@ func main(){
 	contaTeste.depositarDezReais()
 	contaTeste.depositarDezReais()
 
-	fmt.,printLn(contaTeste)
+	fmt.printLn(contaTeste)
 }
