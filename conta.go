@@ -10,56 +10,56 @@ type ContaCorrente struct {
 // Este é um método chamado Depositar.
 // Ele é associado à struct ContaCorrente por meio do receiver (c *ContaCorrente),
 // ou seja, é como se fosse um "método de instância".
-// O parâmetro c é um ponteiro para uma instância de ContaCorrente,
-// permitindo modificar o saldo da conta original.
-// O método recebe um valor de depósito e o adiciona ao saldo da conta.
-func (c *ContaCorrente) Depositar(valorDoDeposito float64) {
-    if valorDoDeposito > 0 {
-        c.saldo += valordoDeposito
-        return "Deposito realizado com sucesso"
-    } else { 
-        return "Valor do depósito menor que zero"
-    }
+// O receiver é um ponteiro, permitindo modificar o saldo original.
+// O método recebe um valor e adiciona ao saldo, retornando uma mensagem de status.
+func (c *ContaCorrente) Depositar(valorDoDeposito float64) string {
+	if valorDoDeposito > 0 {
+		c.saldo += valorDoDeposito
+		return "Depósito realizado com sucesso"
+	} else {
+		return "Valor do depósito menor que zero"
+	}
 }
 
-func (c *ContaCorrente) Transferir(valorDaTransferencia float64,contaDestino *ContaCorrente) bool{
-	if valorDaTransferencia < c.saldo && valorDaTransferencia> 0{
+// Método para transferir valor de uma conta para outra.
+// Retorna verdadeiro se a transferência foi bem-sucedida.
+func (c *ContaCorrente) Transferir(valorDaTransferencia float64, contaDestino *ContaCorrente) bool {
+	if valorDaTransferencia > 0 && valorDaTransferencia <= c.saldo {
 		c.saldo -= valorDaTransferencia
 		contaDestino.Depositar(valorDaTransferencia)
 		return true
-	}else {
+	} else {
 		return false
 	}
 }
 
 func main() {
-	// Criamos uma variável chamada conta que é uma instância da struct ContaCorrente,
-	// com os campos titular e saldo inicializados.
+	// Criamos uma conta com saldo inicial.
 	conta := ContaCorrente{titular: "Thiago", saldo: 10}
 
-	// Chamamos o método Depositar na variável conta para adicionar 50 ao saldo.
-	conta.Depositar(50)
+	// Realizamos um depósito e mostramos o saldo.
+	status := conta.Depositar(50)
+	fmt.Println(status)
+	fmt.Println("Saldo da conta do Thiago:", conta.saldo)
 
-	// Imprimimos o novo saldo da conta.
-	fmt.Println(conta.saldo) // Correção aqui: era "printLn", o correto é "Println" com "P" maiúsculo.
+	// Criamos outra conta.
+	contaDaSilvia := ContaCorrente{titular: "Silvia", saldo: 500}
+	fmt.Println("Saldo da Silvia antes do depósito:", contaDaSilvia.saldo)
 
-	contaDaSilvia := contaContaCorrente{}
-    contaDaSilvia.titular = "Silvia"
-    contaDaSilvia.saldo = 500
-    
-	fmt.Println(contaDaSilvia.saldo) 
-    status, valor := contaDaSilvia.Depositar(2000)
-    fmt.Println(status, valor) 
+	// Fazemos um depósito na conta da Silvia.
+	status = contaDaSilvia.Depositar(2000)
+	fmt.Println(status)
+	fmt.Println("Saldo da Silvia após o depósito:", contaDaSilvia.saldo)
 
-	contaDoGustavo := ContaCorrente{titular: "gustavo", saldo: 100}
+	// Criamos mais uma conta.
+	contaDoGustavo := ContaCorrente{titular: "Gustavo", saldo: 100}
+	fmt.Println("Saldo do Gustavo antes da transferência:", contaDoGustavo.saldo)
 
-	fmt.printLn(contaDaSilvia)
-	fmt.Println(contaDoGustavo)
+	// Fazemos uma transferência da Silvia para o Gustavo.
+	statusTransferencia := contaDaSilvia.Transferir(200, &contaDoGustavo)
 
-	status := contaDaSilvia.Transferir(200,&contaDoGustavo)
-
-	fmt.print(Status)
-	fmt.Println(contaDaSilvia)
-	fmt.Println(contaDoGustavo)
-
+	// Mostramos o resultado da transferência e os saldos atualizados.
+	fmt.Println("Transferência realizada?", statusTransferencia)
+	fmt.Println("Saldo da Silvia após transferência:", contaDaSilvia.saldo)
+	fmt.Println("Saldo do Gustavo após receber:", contaDoGustavo.saldo)
 }
